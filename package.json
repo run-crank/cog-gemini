@@ -1,0 +1,80 @@
+{
+  "name": "cog-gemini",
+  "version": "0.1.0",
+  "description": "Google Gemini Cog for use with Crank",
+  "license": "MIT",
+  "cog": {
+    "name": "stackmoxie/gemini",
+    "label": "Gemini",
+    "homepage": "",
+    "authHelpUrl": ""
+  },
+  "scripts": {
+    "build-docker": "docker build -t stackmoxie/openai:$npm_package_version -t stackmoxie/openai:latest .",
+    "build-proto": "scripts/build-proto.sh",
+    "build-ts": "tsc",
+    "lint": "eslint --ext .ts src/client src/steps",
+    "start": "check-engine package.json && ts-node src/core/grpc-server.ts",
+    "test": "nyc mocha -r ts-node/register test/*.ts test/**/*.ts test/**/**/*.ts",
+    "version": "crank cog:readme stackmoxie/openai && git add README.md"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "test/**/*.ts",
+      "**/*.js",
+      "src/core/grpc-server.ts"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "all": true
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.7",
+    "@types/google-protobuf": "^3.2.7",
+    "@types/mocha": "^5.2.7",
+    "@types/needle": "^2.0.4",
+    "@types/node": "^12.0.4",
+    "chai": "^4.2.0",
+    "check-engine": "^1.8.1",
+    "eslint": "^8.54.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "grpc_tools_node_protoc_ts": "^5.3.0",
+    "grpc-tools": "^1.9.0",
+    "mocha": "^7.2.0",
+    "nyc": "^14.1.1",
+    "sinon-chai": "^3.3.0",
+    "ts-sinon": "^1.0.17",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
+    "@grpc/grpc-js": "^1.9.11",
+    "@run-crank/utilities": "^0.4.1",
+    "@types/dotenv": "^8.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "chai-as-promised": "^7.1.1",
+    "compute-cosine-similarity": "^1.1.0",
+    "dotenv": "^16.4.4",
+    "google-protobuf": "^3.8.0",
+    "lodash": "^4.17.21",
+    "needle": "^2.5.0",
+    "openai": "^4.12.4",
+    "similarity": "^1.2.1",
+    "string-similarity": "^4.0.4",
+    "ts-node": "^8.3.0"
+  }
+}
