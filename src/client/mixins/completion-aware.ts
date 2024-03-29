@@ -1,32 +1,29 @@
-import openai from 'openai';
-import { ChatCompletionWrapper } from '../open-ai-response-wrapper';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { ClientResponseWrapper } from '../client-response-wrapper';
 
 export class CompletionAwareMixin {
   clientReady: Promise<boolean>;
 
-  client: openai;
+  client: GoogleGenerativeAI;
 
-  public async getChatCompletion(model: string, messages: any[], functions?: any[]): Promise<any> {
+  public async getChatCompletion(model: string, message: string, functions?: any[]): Promise<ClientResponseWrapper> {
     const startTime = Date.now();
     await this.clientReady;
     try {
-      const requestObject = {
-        model,
-        messages,
-      };
-      if (functions) {
-        requestObject['functions'] = functions;
-      }
-
-      const response = await this.client.chat.completions.create(requestObject);
-      if (!response && !response.choices && !response.choices[0] && !response.choices[0].message) {
-        throw new Error(`Error response from OpenAI API: ${JSON.stringify(response)}`);
+            console.log("debugging point 3")
+      const genAIModel = this.client.getGenerativeModel({model: model});
+            console.log("debugging point 4")
+      const tokenUsage = await genAIModel.countTokens(message);
+            console.log("debugging point 5")
+      const response = await genAIModel.generateContent(message);
+      if (!response && !response.response && !response.response.text) {
+        throw new Error(`Error response from Gemini API: ${JSON.stringify(response)}`);
       }
       const endTime = Date.now();
-      const responseWrapper = new ChatCompletionWrapper(response, endTime - startTime, requestObject);
+      const responseWrapper = new ClientResponseWrapper(response.response, endTime - startTime, message, tokenUsage);
       return responseWrapper;
     } catch (error) {
-      throw new Error(`Error response from OpenAI API: ${error.message}`);
+      throw new Error(`Error response from Gemini API: ${error.message}`);
     }
   }
 }
