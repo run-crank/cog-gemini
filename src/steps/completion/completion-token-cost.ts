@@ -10,10 +10,10 @@ import {
 import { baseOperators } from '../../client/constants/operators';
 
 export class CompletionTokenCost extends BaseStep implements StepInterface {
-  protected stepName: string = 'Check OpenAI GPT prompt token cost given a prompt and model';
+  protected stepName: string = 'Check Gemini prompt token cost given a prompt and model';
 
   // tslint:disable-next-line:max-line-length
-  protected stepExpression: string = 'OpenAI model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
+  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -103,22 +103,17 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
     type += '_tokens';
 
     try {
-      const messages = [];
-      const message = {};
-      message['role'] = 'user';
-      message['content'] = prompt;
-      messages.push(message);
-      const completion = await this.client.getChatCompletion(model, messages);
+      const message = prompt;
+      const completion = await this.client.getChatCompletion(model, message);
       const usage = completion?.usage;
       const actualUsage = usage[type];
-      const response = completion.choices[0].message.content;
+      const response = completion.text_response;
       const result = this.assert(operator, actualUsage.toString(), expectation.toString(), 'response');
       const returnObj = {
         model,
         prompt,
         response,
         usage,
-        created: completion.created,
         request: completion.request_payload,
       };
       const records = this.createRecords(type, actualUsage, returnObj, stepData.__stepOrder);
@@ -132,13 +127,13 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
       }
       if (e instanceof util.InvalidOperandError) {
         return this.error(
-          'There was an error checking GTP chat completion object: %s',
+          'There was an error checking Gemini chat completion object: %s',
           [e.message],
         );
       }
 
       return this.error(
-        'There was an error checking  GTP chat completion object: %s',
+        'There was an error checking  Gemini chat completion object: %s',
         [e.toString()],
       );
     }

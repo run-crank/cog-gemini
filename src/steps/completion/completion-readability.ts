@@ -10,10 +10,10 @@ import {
 import { baseOperators } from '../../client/constants/operators';
 
 export class CompletionReadability extends BaseStep implements StepInterface {
-  protected stepName: string = 'Check OpenAI GPT prompt response FRES reading ease evaluation';
+  protected stepName: string = 'Check Gemini prompt response FRES reading ease evaluation';
 
   // tslint:disable-next-line:max-line-length quotemark
-  protected stepExpression: string = `OpenAI model (?<model>[a-zA-Z0-9_ -.]+) school level of the response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be less than|be greater than|be one of|be|not be one of|not be) ?(?<schoollevel>.+)?`;
+  protected stepExpression: string = `Gemini model (?<model>[a-zA-Z0-9_ -.]+) school level of the response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be less than|be greater than|be one of|be|not be one of|not be) ?(?<schoollevel>.+)?`;
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -138,13 +138,10 @@ export class CompletionReadability extends BaseStep implements StepInterface {
     const operator = stepData.operator || 'be';
 
     try {
-      const messages = [];
-      const message = {};
-      message['role'] = 'user';
-      message['content'] = prompt;
-      messages.push(message);
-      const completion = await this.client.getChatCompletion(model, messages);
-      const response = completion.choices[0].message.content;
+      const message = prompt;
+      console.log(11111)
+      const completion = await this.client.getChatCompletion(model, message);
+      const response = completion.text_response;
       const fleschReadingEaseScore = CompletionReadability.getFleschReadingEaseScore(response);
       const fleschReadingEaseScoreObj = CompletionReadability.fleschScoreToSchoolLevel(fleschReadingEaseScore);
       const expectedScore = CompletionReadability.fleschSchoolLevelToScore(expectedSchoolLevel);
@@ -159,7 +156,6 @@ export class CompletionReadability extends BaseStep implements StepInterface {
         schoollevel: fleschReadingEaseScoreObj.schoollevel,
         notes: fleschReadingEaseScoreObj.notes,
         usage: completion.usage,
-        created: completion.created,
         request: completion.request_payload,
       };
       const records = this.createRecords(returnObj, stepData.__stepOrder);
@@ -170,7 +166,7 @@ export class CompletionReadability extends BaseStep implements StepInterface {
         return this.error('%s Please provide one of: %s', [e.message, baseOperators.join(', ')]);
       }
       if (e instanceof util.InvalidOperandError) {
-        return this.error('There was an error checking GTP chat completion object: %s', [e.message]);
+        return this.error('There was an error checking Gemini chat completion object: %s', [e.message]);
       }
 
       return this.error('There was an error calculating Flesch reading ease : %s', [e.toString()]);

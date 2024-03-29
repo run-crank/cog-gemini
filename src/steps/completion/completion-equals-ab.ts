@@ -11,10 +11,10 @@ import {
 import { baseOperators } from '../../client/constants/operators';
 
 export class CompletionEqualsAb extends BaseStep implements StepInterface {
-  protected stepName: string = 'Compare OpenAI GPT model A and B prompt responses from completion';
+  protected stepName: string = 'Compare Gemini model A and B prompt responses from completion';
 
   // tslint:disable-next-line:max-line-length quotemark
-  protected stepExpression: string = `OpenAI model (?<modela>[a-zA-Z0-9_ -.]+) and (?<modelb>[a-zA-Z0-9_ -.]+) responses to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`;
+  protected stepExpression: string = `Gemini model (?<modela>[a-zA-Z0-9_ -.]+) and (?<modelb>[a-zA-Z0-9_ -.]+) responses to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`;
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -83,15 +83,11 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
     const operator = stepData.operator || 'be';
 
     try {
-      const messages = [];
-      const message = {};
-      message['role'] = 'user';
-      message['content'] = prompt;
-      messages.push(message);
-      const completiona = _.cloneDeep(await this.client.getChatCompletion(modela, messages));
-      const actuala = completiona.choices[0].message.content;
+      const message = prompt;
+      const completiona = _.cloneDeep(await this.client.getChatCompletion(modela, message));
+      const actuala = completiona.text_response;
       const resulta = this.assert(operator, actuala, expectation, 'responsea');
-      const completionb = _.cloneDeep(await this.client.getChatCompletion(modelb, messages));
+      const completionb = _.cloneDeep(await this.client.getChatCompletion(modelb, message));
       const actualb = completionb.choices[0].message.content;
       const resultb = this.assert(operator, actualb, expectation, 'responseb');
       const result = resulta.valid && resultb.valid;
@@ -122,10 +118,10 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
         return this.error('%s Please provide one of: %s', [e.message, baseOperators.join(', ')]);
       }
       if (e instanceof util.InvalidOperandError) {
-        return this.error('There was an error checking GTP chat completion object: %s', [e.message]);
+        return this.error('There was an error checking Gemini chat completion object: %s', [e.message]);
       }
 
-      return this.error('There was an error checking  GTP chat completion object: %s', [e.toString()]);
+      return this.error('There was an error checking  Gemini chat completion object: %s', [e.toString()]);
     }
   }
 
