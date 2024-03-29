@@ -1,0 +1,16 @@
+scenario: Compare Gemini 1 And Gemini 1.5 Pro
+description: >
+  Compare Gemini 1 And Gemini 1.5 Pro
+
+tokens:
+  test:
+    prompt: Describe US Politics to 5th grader in one paragraph.
+    operator: contain
+    schoollevel: US
+    semanticsimilarity: 0.7
+    modela: gemini-1.0-pro
+    # modelb: gemini-1.5-pro-latest
+steps:
+  - step: Gemini model {{test.modela}} response to "{{test.prompt}}" should {{test.operator}} {{test.schoollevel}}
+    data:
+      __stepOrder: 1
