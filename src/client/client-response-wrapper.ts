@@ -1,7 +1,7 @@
-import { EnhancedGenerateContentResponse, CountTokensResponse } from "@google/generative-ai";
+import { GenerateContentResult } from "@google/generative-ai";
 
 export class ClientResponseWrapper {
-  private originalClass: EnhancedGenerateContentResponse;
+  private originalClass: object;
 
   public response_time: number;
 
@@ -9,17 +9,17 @@ export class ClientResponseWrapper {
 
   public text_response: string;
 
-  public usage: any;
+  public usage: object;
 
-  constructor(originalClass: EnhancedGenerateContentResponse, responseTime: number, requestPrompt: string, tokenUsage: CountTokensResponse) {
-    this.originalClass = originalClass;
+  constructor(originalClass: GenerateContentResult, responseTime: number, requestPrompt: string, tokenUsage: number) {
+    this.originalClass = JSON.parse(JSON.stringify(originalClass.response, null, 2));
     this.copyProperties();
     this.response_time = responseTime;
     this.request_payload = {'prompt': requestPrompt};
-    this.text_response = originalClass.text();
+    this.text_response = this.originalClass['candidates'][0].content.parts[0].text;
     this.usage = {
       //TODO: countToken API didn't specify the input/output token
-      total: tokenUsage.totalTokens,
+      total: tokenUsage,
     }
   }
 

@@ -10,17 +10,15 @@ export class CompletionAwareMixin {
     const startTime = Date.now();
     await this.clientReady;
     try {
-            console.log("debugging point 3")
       const genAIModel = this.client.getGenerativeModel({model: model});
-            console.log("debugging point 4")
-      const tokenUsage = await genAIModel.countTokens(message);
-            console.log("debugging point 5")
+      const inputTokenUsage = await genAIModel.countTokens(message);
       const response = await genAIModel.generateContent(message);
-      if (!response && !response.response && !response.response.text) {
+      if (!response && !response.response && !response.response.candidates) {
         throw new Error(`Error response from Gemini API: ${JSON.stringify(response)}`);
       }
+      const outputTokenUsage = await genAIModel.countTokens(response.response.candidates[0].content.parts[0].text);
       const endTime = Date.now();
-      const responseWrapper = new ClientResponseWrapper(response.response, endTime - startTime, message, tokenUsage);
+      const responseWrapper = new ClientResponseWrapper(response, endTime - startTime, message, inputTokenUsage.totalTokens + outputTokenUsage.totalTokens);
       return responseWrapper;
     } catch (error) {
       throw new Error(`Error response from Gemini API: ${error.message}`);
