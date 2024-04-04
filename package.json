@@ -10,13 +10,13 @@
     "authHelpUrl": ""
   },
   "scripts": {
-    "build-docker": "docker build -t stackmoxie/openai:$npm_package_version -t stackmoxie/openai:latest .",
+    "build-docker": "docker build -t stackmoxie/gemini:$npm_package_version -t stackmoxie/gemini:latest .",
     "build-proto": "scripts/build-proto.sh",
     "build-ts": "tsc",
     "lint": "eslint --ext .ts src/client src/steps",
     "start": "check-engine package.json && ts-node src/core/grpc-server.ts",
     "test": "nyc mocha -r ts-node/register test/*.ts test/**/*.ts test/**/**/*.ts",
-    "version": "crank cog:readme stackmoxie/openai && git add README.md"
+    "version": "crank cog:readme stackmoxie/gemini && git add README.md"
   },
   "nyc": {
     "extension": [
@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.17.0",
+    "@google/generative-ai": "^0.3.1",
     "@grpc/grpc-js": "^1.9.11",
     "@run-crank/utilities": "^0.4.1",
     "@types/dotenv": "^8.2.0",
@@ -72,7 +73,6 @@
     "google-protobuf": "^3.8.0",
     "lodash": "^4.17.21",
     "needle": "^2.5.0",
-    "openai": "^4.12.4",
     "similarity": "^1.2.1",
     "string-similarity": "^4.0.4",
     "ts-node": "^8.3.0"

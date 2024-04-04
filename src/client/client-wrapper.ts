@@ -3,10 +3,8 @@ import { Field } from '../core/base-step';
 import { FieldDefinition } from '../proto/cog_pb';
 import {
   CompletionAwareMixin,
-  EmbeddingsAwareMixin,
 } from './mixins';
-import openai from 'openai';
-
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 /**
  * This is a wrapper class around the API client for your Cog. An instance of
  * this class is passed to the constructor of each of your steps, and can be
@@ -24,8 +22,8 @@ class ClientWrapper {
   public static expectedAuthFields: Field[] = [{
     field: 'apiKey',
     type: FieldDefinition.Type.STRING,
-    description: 'OpenAI API Key',
-    help: 'OpenAI API Key',
+    description: 'Gemini API Key',
+    help: 'Gemini API Key',
   }];
 
   /**
@@ -34,7 +32,7 @@ class ClientWrapper {
    */
   auth: grpc.Metadata;
 
-  client: openai;
+  client: GoogleGenerativeAI;
 
   clientReady: Promise<boolean>;
 
@@ -50,24 +48,22 @@ class ClientWrapper {
    *   simplify automated testing. Should default to the class/constructor of
    *   the underlying/wrapped API client.
    */
-  constructor(auth: grpc.Metadata, clientConstructor = openai.OpenAI) {
+  constructor(auth: grpc.Metadata, clientConstructor = GoogleGenerativeAI) {
     // Call auth.get() for any field defined in the static expectedAuthFields
     // array here. The argument passed to get() should match the "field" prop
     // declared on the definition object above.
     this.auth = auth;
-    this.client = new clientConstructor({
-      apiKey: this.auth.get('apiKey').toString(), // defaults to process.env["OPENAI_API_KEY"]
-    });
+    this.client = new clientConstructor(
+      this.auth.get('apiKey').toString(), // defaults to process.env["OPENAI_API_KEY"]
+  );
     this.clientReady = Promise.resolve(true);
   }
 }
 
 interface ClientWrapper extends
-  CompletionAwareMixin,
-  EmbeddingsAwareMixin {}
+  CompletionAwareMixin {}
 applyMixins(ClientWrapper, [
   CompletionAwareMixin,
-  EmbeddingsAwareMixin,
 ]);
 
 function applyMixins(derivedCtor: any, baseCtors: any[]) {

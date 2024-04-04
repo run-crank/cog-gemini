@@ -10,7 +10,7 @@ import { AzureBlobContainer } from '../log/azure-blob-container';
 
 export class Cog implements ICogServiceServer {
   private steps: StepInterface[];
-  private blobContainer: AzureBlobContainer = new AzureBlobContainer("openai-cog-logs")
+  private blobContainer: AzureBlobContainer = new AzureBlobContainer("gemini-cog-logs")
 
   constructor(private clientWrapperClass, private stepMap: Record<string, any> = {}) {
     // Dynamically reads the contents of the ./steps folder for step definitions and makes the

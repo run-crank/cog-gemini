@@ -10,10 +10,10 @@ import {
 import { baseOperators } from '../../client/constants/operators';
 
 export class CompletionWordCount extends BaseStep implements StepInterface {
-  protected stepName: string = 'Check OpenAI GPT prompt response word count from completion';
+  protected stepName: string = 'Check Gemini prompt response word count from completion';
 
   // tslint:disable-next-line:max-line-length quotemark
-  protected stepExpression: string = `OpenAI model (?<model>[a-zA-Z0-9_ -.]+) word count in a response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`;
+  protected stepExpression: string = `Gemini model (?<model>[a-zA-Z0-9_ -.]+) word count in a response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`;
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -85,13 +85,9 @@ export class CompletionWordCount extends BaseStep implements StepInterface {
     const operator = stepData.operator || 'be';
 
     try {
-      const messages = [];
-      const message = {};
-      message['role'] = 'user';
-      message['content'] = prompt;
-      messages.push(message);
-      const completion = await this.client.getChatCompletion(model, messages);
-      const response = completion.choices[0].message.content;
+      const message = prompt;
+      const completion = await this.client.getChatCompletion(model, message);
+      const response = completion.text_response;
       const actual = CompletionWordCount.getWordCount(response);
       const result = this.assert(operator, actual.toString(), expectation.toString(), 'response');
       const returnObj = {
@@ -100,7 +96,6 @@ export class CompletionWordCount extends BaseStep implements StepInterface {
         response,
         wordcount: actual,
         usage: completion.usage,
-        created: completion.created,
         request: completion.request_payload,
       };
       const records = this.createRecords(returnObj, stepData.__stepOrder);
@@ -110,10 +105,10 @@ export class CompletionWordCount extends BaseStep implements StepInterface {
         return this.error('%s Please provide one of: %s', [e.message, baseOperators.join(', ')]);
       }
       if (e instanceof util.InvalidOperandError) {
-        return this.error('There was an error checking GTP chat completion object: %s', [e.message]);
+        return this.error('There was an error checking Gemini chat completion object: %s', [e.message]);
       }
 
-      return this.error('There was an error checking  GTP chat completion object: %s', [e.toString()]);
+      return this.error('There was an error checking  Gemini chat completion object: %s', [e.toString()]);
     }
   }
 
