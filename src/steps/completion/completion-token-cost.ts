@@ -87,7 +87,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
     },
   ];
 
-  private acceptedTokentype: Array<String> = ['prompt', 'completion', 'total'];
+  private acceptedTokentype: Array<String> = ['input', 'output', 'total'];
 
   async executeStep(step: Step) {
     const stepData: any = step.getData() ? step.getData().toJavaScript() : {};

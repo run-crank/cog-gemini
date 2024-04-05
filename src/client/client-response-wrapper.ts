@@ -18,8 +18,8 @@ export class ClientResponseWrapper {
     this.request_payload = {'prompt': requestPrompt};
     this.text_response = this.originalClass['candidates'][0].content.parts[0].text;
     this.usage = {      
-      prompt_tokens: promptTokenUsage,
-      completion_tokens: responseTokenUsage,
+      input_tokens: promptTokenUsage,
+      output_tokens: responseTokenUsage,
       total_tokens: promptTokenUsage + responseTokenUsage,
     }
   }
