@@ -18,7 +18,7 @@ export class CompletionAwareMixin {
       }
       const outputTokenUsage = await genAIModel.countTokens(response.response.candidates[0].content.parts[0].text);
       const endTime = Date.now();
-      const responseWrapper = new ClientResponseWrapper(response, endTime - startTime, message, inputTokenUsage.totalTokens + outputTokenUsage.totalTokens);
+      const responseWrapper = new ClientResponseWrapper(response, endTime - startTime, message, inputTokenUsage.totalTokens, outputTokenUsage.totalTokens);
       return responseWrapper;
     } catch (error) {
       throw new Error(`Error response from Gemini API: ${error.message}`);

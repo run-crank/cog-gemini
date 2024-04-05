@@ -13,7 +13,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
   protected stepName: string = 'Check Gemini prompt token cost given a prompt and model';
 
   // tslint:disable-next-line:max-line-length
-  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
+  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_.-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
