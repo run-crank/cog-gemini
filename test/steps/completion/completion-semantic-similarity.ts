@@ -21,8 +21,8 @@ describe('CompletionSemanticSimilarity', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('CompletionSemanticSimilarity');
-      expect(stepDef.getName()).to.equal('Check OpenAI GPT semantic similarity of response to provided text from completion');
-      expect(stepDef.getExpression()).to.equal(`OpenAI model (?<model>[a-zA-Z0-9_ -.]+) response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" semantically compared with "(?<comparetext>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<semanticsimilarity>.+)?`);
+      expect(stepDef.getName()).to.equal('Check Gemini semantic similarity of response to provided text from completion');
+      expect(stepDef.getExpression()).to.equal(`Gemini model (?<model>[a-zA-Z0-9_ -.]+) response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" semantically compared with "(?<comparetext>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<semanticsimilarity>.+)?`);
       expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
@@ -54,11 +54,11 @@ describe('CompletionSemanticSimilarity', () => {
   });
 
   describe('ExecuteStep', () => {
-    describe('GPT response meets expected semantic similarity', () => {
+    describe('Gemini response meets expected semantic similarity', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response is semantically similar to the expected text
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
+        // Setup for the scenario where the Gemini response is semantically similar to the expected text
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
         const compareText: string = 'Hello, Human!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
@@ -81,12 +81,12 @@ describe('CompletionSemanticSimilarity', () => {
       });
     });
 
-    describe('GPT response does not meet expected semantic similarity', () => {
+    describe('Gemini response does not meet expected semantic similarity', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response is not semantically similar to the expected text
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
-        const compareText: string = 'Goodbye, GPT!';
+        // Setup for the scenario where the Gemini response is not semantically similar to the expected text
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
+        const compareText: string = 'Goodbye, Gemini!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
           prompt: expectedPrompt,
@@ -108,7 +108,7 @@ describe('CompletionSemanticSimilarity', () => {
       });
     });
 
-    describe('Error occurred while fetching GPT response', () => {
+    describe('Error occurred while fetching Gemini response', () => {
       beforeEach(() => {
         // setup for the scenario where an error occurs during operation
         clientWrapperStub.getChatCompletion.throws('error');

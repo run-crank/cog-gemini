@@ -22,8 +22,8 @@ describe('CompletionEquals', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('CompletionEquals');
-      expect(stepDef.getName()).to.equal('Check OpenAI GPT prompt response from completion');
-      expect(stepDef.getExpression()).to.equal(`OpenAI model (?<model>[a-zA-Z0-9_ -.]+) response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`);
+      expect(stepDef.getName()).to.equal('Check Gemini prompt response from completion');
+      expect(stepDef.getExpression()).to.equal(`Gemini model (?<model>[a-zA-Z0-9_ -.]+) response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`);
       expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
@@ -52,10 +52,10 @@ describe('CompletionEquals', () => {
   });
 
   describe('ExecuteStep', () => {
-    describe('GPT prompt response meets expectation', () => {
+    describe('Gemini prompt response meets expectation', () => {
       beforeEach(() => {
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
           prompt: expectedPrompt,
@@ -74,10 +74,10 @@ describe('CompletionEquals', () => {
       });
     });
 
-    describe('GPT prompt response does not meet expectation', () => {
+    describe('Gemini prompt response does not meet expectation', () => {
       beforeEach(() => {
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
           prompt: expectedPrompt,
@@ -96,7 +96,7 @@ describe('CompletionEquals', () => {
       });
     });
 
-    describe('Error occurred while fetching GPT prompt response', () => {
+    describe('Error occurred while fetching Gemini prompt response', () => {
       beforeEach(() => {
         // setup for the scenario where an error occurs during operation
         clientWrapperStub.getChatCompletion.throws('error');

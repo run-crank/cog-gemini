@@ -25,15 +25,15 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
   protected expectedFields: Field[] = [{
     field: 'prompt',
     type: FieldDefinition.Type.STRING,
-    description: 'User Prompt to send to GPT',
+    description: 'User Prompt to send to Gemini',
   }, {
     field: 'modela',
     type: FieldDefinition.Type.STRING,
-    description: 'GPT Model A to use for completion',
+    description: 'Gemini Model A to use for completion',
   }, {
     field: 'modelb',
     type: FieldDefinition.Type.STRING,
-    description: 'GPT Model B to use for completion',
+    description: 'Gemini Model B to use for completion',
   }, {
     field: 'operator',
     type: FieldDefinition.Type.STRING,
@@ -43,7 +43,7 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
   {
     field: 'expectation',
     type: FieldDefinition.Type.STRING,
-    description: 'Expected GPT response value',
+    description: 'Expected Gemini response value',
     optionality: FieldDefinition.Optionality.OPTIONAL,
   }];
 
@@ -87,8 +87,8 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
       const completiona = _.cloneDeep(await this.client.getChatCompletion(modela, message));
       const actuala = completiona.text_response;
       const resulta = this.assert(operator, actuala, expectation, 'responsea');
-      const completionb = _.cloneDeep(await this.client.getChatCompletion(modelb, message));
-      const actualb = completionb.choices[0].message.content;
+      const completionb = _.cloneDeep(await this.client.getChatCompletion(modelb, message));    
+      const actualb = completionb.text_response;
       const resultb = this.assert(operator, actualb, expectation, 'responseb');
       const result = resulta.valid && resultb.valid;
 
@@ -121,7 +121,7 @@ export class CompletionEqualsAb extends BaseStep implements StepInterface {
         return this.error('There was an error checking Gemini chat completion object: %s', [e.message]);
       }
 
-      return this.error('There was an error checking  Gemini chat completion object: %s', [e.toString()]);
+      return this.error('There was an error checking Gemini chat completion object: %s', [e.toString()]);
     }
   }
 

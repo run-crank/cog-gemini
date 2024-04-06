@@ -1,0 +1,20 @@
+scenario: Allergy context comprehension test
+description: >
+  Test the models' ability to understand context of a nut allergy
+
+tokens:
+  test:
+    prompt: Timothy is allergic to nuts. Can Timothy eat a peanut butter sandwich? Answer YES or NO
+    modela: gemini-1.0-pro
+    modelb: gemini-1.0-pro-latest
+    equalsExpectation: NO
+    equalsOperator: be
+
+steps:
+- step: Gemini model {{test.modela}} response to "{{test.prompt}}" should {{test.equalsOperator}} {{test.equalsExpectation}}
+  data:
+    __StepOrder: 1
+- step: Gemini model {{test.modelb}} response to "{{test.prompt}}" should {{test.equalsOperator}} {{test.equalsExpectation}}
+  data:
+    __StepOrder: 2
+

@@ -1,0 +1,25 @@
+scenario: Compare Gemini 1.0 pro models
+description: >
+  Compare the readability of responses from two Gemini 1.0 pro models
+
+tokens:
+  test:
+    prompt1: Describe the process of photosynthesis to a middle school student.
+    prompt2: Describe nuclear power in simple terms to a middle school student.
+    modela: gemini-1.0-pro
+    modelb: gemini-1.0-pro-latest
+    readabilityOperator: be greater than
+    schoolLevel: 10th grade
+steps:
+- step: Gemini model {{test.modela}} school level of the response to "{{test.prompt1}}" should {{test.readabilityOperator}} {{test.schoolLevel}}
+  data:
+    __stepOrder: 1
+- step: Gemini model {{test.modelb}} school level of the response to "{{test.prompt1}}" should {{test.readabilityOperator}} {{test.schoolLevel}}
+  data:
+    __stepOrder: 2
+- step: Gemini model {{test.modela}} school level of the response to "{{test.prompt2}}" should {{test.readabilityOperator}} {{test.schoolLevel}}
+  data:
+    __stepOrder: 3
+- step: Gemini model {{test.modelb}} school level of the response to "{{test.prompt2}}" should {{test.readabilityOperator}} {{test.schoolLevel}}
+  data:
+    __stepOrder: 4

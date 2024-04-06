@@ -13,7 +13,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
   protected stepName: string = 'Check Gemini prompt token cost given a prompt and model';
 
   // tslint:disable-next-line:max-line-length
-  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
+  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_.-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens';
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -25,12 +25,12 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
     {
       field: 'prompt',
       type: FieldDefinition.Type.STRING,
-      description: 'User Prompt to send to GPT',
+      description: 'User Prompt to send to Gemini',
     },
     {
       field: 'model',
       type: FieldDefinition.Type.STRING,
-      description: 'GPT Model to use for completion',
+      description: 'Gemini Model to use for completion',
     },
     {
       field: 'type',
@@ -47,7 +47,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
     {
       field: 'expectation',
       type: FieldDefinition.Type.NUMERIC,
-      description: 'Expected GPT prompt/response/total token cost',
+      description: 'Expected Gemini prompt/response/total token cost',
       optionality: FieldDefinition.Optionality.OPTIONAL,
     },
   ];
@@ -87,7 +87,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
     },
   ];
 
-  private acceptedTokentype: Array<String> = ['prompt', 'completion', 'total'];
+  private acceptedTokentype: Array<String> = ['input', 'output', 'total'];
 
   async executeStep(step: Step) {
     const stepData: any = step.getData() ? step.getData().toJavaScript() : {};
@@ -133,7 +133,7 @@ export class CompletionTokenCost extends BaseStep implements StepInterface {
       }
 
       return this.error(
-        'There was an error checking  Gemini chat completion object: %s',
+        'There was an error checking Gemini chat completion object: %s',
         [e.toString()],
       );
     }

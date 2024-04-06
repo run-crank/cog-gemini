@@ -11,15 +11,16 @@ export class ClientResponseWrapper {
 
   public usage: object;
 
-  constructor(originalClass: GenerateContentResult, responseTime: number, requestPrompt: string, tokenUsage: number) {
+  constructor(originalClass: GenerateContentResult, responseTime: number, requestPrompt: string, promptTokenUsage: number, responseTokenUsage: number) {
     this.originalClass = JSON.parse(JSON.stringify(originalClass.response, null, 2));
     this.copyProperties();
     this.response_time = responseTime;
     this.request_payload = {'prompt': requestPrompt};
     this.text_response = this.originalClass['candidates'][0].content.parts[0].text;
-    this.usage = {
-      //TODO: countToken API didn't specify the input/output token
-      total: tokenUsage,
+    this.usage = {      
+      input_tokens: promptTokenUsage,
+      output_tokens: responseTokenUsage,
+      total_tokens: promptTokenUsage + responseTokenUsage,
     }
   }
 

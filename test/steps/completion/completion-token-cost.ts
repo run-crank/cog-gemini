@@ -21,8 +21,8 @@ describe('CompletionTokenCost', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('CompletionTokenCost');
-      expect(stepDef.getName()).to.equal('Check OpenAI GPT prompt token cost given a prompt and model');
-      expect(stepDef.getExpression()).to.equal('OpenAI model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens');
+      expect(stepDef.getName()).to.equal('Check Gemini prompt token cost given a prompt and model');
+      expect(stepDef.getExpression()).to.equal('Gemini model (?<model>[a-zA-Z0-9_-]+) ?(?<type>.+)? token cost in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? tokens');
       expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
@@ -55,10 +55,10 @@ describe('CompletionTokenCost', () => {
   });
 
   describe('ExecuteStep', () => {
-    describe('GPT prompt response meets token cost expectation', () => {
+    describe('Gemini prompt response meets token cost expectation', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response meets the expected token cost
-        const expectedModel: string = 'gpt-model';
+        // Setup for the scenario where the Gemini response meets the expected token cost
+        const expectedModel: string = 'gemini-model';
         const expectedPrompt: string = 'What is 1 + 1?';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
@@ -81,10 +81,10 @@ describe('CompletionTokenCost', () => {
       });
     });
 
-    describe('GPT prompt response does not meet token cost expectation', () => {
+    describe('Gemini prompt response does not meet token cost expectation', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response does not meet the expected token cost
-        const expectedModel: string = 'gpt-model';
+        // Setup for the scenario where the Gemini response does not meet the expected token cost
+        const expectedModel: string = 'gemini-model';
         const expectedPrompt: string = 'Give me a five word response';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
@@ -107,7 +107,7 @@ describe('CompletionTokenCost', () => {
       });
     });
 
-    describe('Error occurred while fetching GPT prompt response', () => {
+    describe('Error occurred while fetching Gemini prompt response', () => {
       beforeEach(() => {
         // setup for the scenario where an error occurs during operation
         clientWrapperStub.getChatCompletion.throws('error');
