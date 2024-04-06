@@ -1,0 +1,13 @@
+scenario: Test response time of Gemini 1.0 Pro model with a trivial prompt
+description: Asks a simple question to Gemini 1.0 and checks if the response time is less than 1 second
+
+tokens:
+  test:
+    trivialPrompt: what is 1 plus 1
+    operator: be less than
+    responseTime: 1000
+    modela: gemini-1.0-pro
+steps:
+- step: Gemini model {{test.modela}} response time in response to "{{test.trivialPrompt}}" should {{test.operator}} {{test.responseTime}} ms
+  data:
+    __stepOrder: 1

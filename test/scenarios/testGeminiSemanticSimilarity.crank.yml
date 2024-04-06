@@ -1,0 +1,19 @@
+scenario: Compare Gemini 1.0 Pro models
+description: >
+  Compare the responses of two Gemini 1.0 Pro models for semantic similarity to a prompt.
+
+tokens:
+  test:
+    prompt: Explain Newton's third law of motion in simple terms in less than 10 words.
+    modela: gemini-1.0-pro
+    modelb: gemini-1.0-pro-latest
+    semanticSimilarityOperator: be greater than
+    semanticSimilarityExpectation: Every action has an equal and opposite reaction
+    semanticSimilarity: 0.4
+steps:
+- step: Gemini model {{test.modela}} response to "{{test.prompt}}" semantically compared with "{{test.semanticSimilarityExpectation}}" should {{test.semanticSimilarityOperator}} {{test.semanticSimilarity}}
+  data:
+    __stepOrder: 1
+- step: Gemini model {{test.modelb}} response to "{{test.prompt}}" semantically compared with "{{test.semanticSimilarityExpectation}}" should {{test.semanticSimilarityOperator}} {{test.semanticSimilarity}}
+  data:
+    __stepOrder: 2

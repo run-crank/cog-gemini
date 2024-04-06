@@ -13,9 +13,14 @@ export class CompletionAwareMixin {
       const genAIModel = this.client.getGenerativeModel({model: model});
       const inputTokenUsage = await genAIModel.countTokens(message);
       const response = await genAIModel.generateContent(message);
+      
       if (!response && !response.response && !response.response.candidates) {
         throw new Error(`Error response from Gemini API: ${JSON.stringify(response)}`);
       }
+      if (response.response.candidates[0].content === undefined) {
+        throw new Error(`No content found in response likely due to SAFETY. ${JSON.stringify(response)}`);
+      } 
+
       const outputTokenUsage = await genAIModel.countTokens(response.response.candidates[0].content.parts[0].text);
       const endTime = Date.now();
       const responseWrapper = new ClientResponseWrapper(response, endTime - startTime, message, inputTokenUsage.totalTokens, outputTokenUsage.totalTokens);

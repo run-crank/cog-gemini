@@ -1,0 +1,20 @@
+scenario: Test Gemini Word Count
+description: >
+  Test the models' ability to explain a topic on less than 20 words
+
+tokens:
+  test:
+    prompt: Describe how interest works in less than 20 words.
+    modela: gemini-1.0-pro
+    modelb: gemini-1.0-pro-latest
+    wordCountExpectation: 20
+    wordCountOperator: be less than
+    
+
+steps:
+- step: Gemini Gemini model {{test.modela}} word count in a response to "{{test.prompt}}" should {{test.wordCountOperator}} {{test.wordCountExpectation}}
+  data:
+    __StepOrder: 1
+- step: Gemini Gemini model {{test.modelb}} word count in a response to "{{test.prompt}}" should {{test.wordCountOperator}} {{test.wordCountExpectation}}
+  data:
+    __StepOrder: 2

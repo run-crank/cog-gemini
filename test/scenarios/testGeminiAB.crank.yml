@@ -1,0 +1,16 @@
+scenario: Compare Gemini 1.0 Pro models
+description: >
+  Compare the responses of two Gemini 1.0 Pro models to a prompt.
+
+tokens:
+  test:
+    prompt: Explain Newton's third law of motion in simple terms in less than 10 words.
+    modela: gemini-1.0-pro
+    modelb: gemini-1.0-pro-latest
+    abOperator: match
+    abExpectation: equal | opposite | reaction
+steps:
+- step: Gemini model {{test.modela}} and {{test.modelb}} responses to "{{test.prompt}}" should {{test.abOperator}} {{test.abExpectation}}
+  data:
+    __stepOrder: 1
+

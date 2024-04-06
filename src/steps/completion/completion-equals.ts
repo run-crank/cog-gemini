@@ -24,11 +24,11 @@ export class CompletionEquals extends BaseStep implements StepInterface {
   protected expectedFields: Field[] = [{
     field: 'prompt',
     type: FieldDefinition.Type.STRING,
-    description: 'User Prompt to send to GPT',
+    description: 'User Prompt to send to Gemini',
   }, {
     field: 'model',
     type: FieldDefinition.Type.STRING,
-    description: 'GPT Model to use for completion',
+    description: 'Gemini Model to use for completion',
   }, {
     field: 'operator',
     type: FieldDefinition.Type.STRING,
@@ -38,7 +38,7 @@ export class CompletionEquals extends BaseStep implements StepInterface {
   {
     field: 'expectation',
     type: FieldDefinition.Type.STRING,
-    description: 'Expected GPT response value',
+    description: 'Expected Gemini response value',
     optionality: FieldDefinition.Optionality.OPTIONAL,
   }];
 
@@ -91,7 +91,7 @@ export class CompletionEquals extends BaseStep implements StepInterface {
         return this.error('There was an error checking Gemini chat completion object: %s', [e.message]);
       }
 
-      return this.error('There was an error checking  Gemini chat completion object: %s', [e.toString()]);
+      return this.error('There was an error checking Gemini chat completion object: %s', [e.toString()]);
     }
   }
 

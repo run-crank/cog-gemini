@@ -13,7 +13,7 @@ export class CompletionResponseTime extends BaseStep implements StepInterface {
   protected stepName: string = 'Check Gemini prompt response response time from request to completion in milliseconds';
 
   // tslint:disable-next-line:max-line-length
-  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_-]+) response time in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? ms';
+  protected stepExpression: string = 'Gemini model (?<model>[a-zA-Z0-9_ -.]+) response time in response to "(?<prompt>[a-zA-Z0-9_ -]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)? ms';
 
   protected stepType: StepDefinition.Type = StepDefinition.Type.VALIDATION;
 
@@ -25,12 +25,12 @@ export class CompletionResponseTime extends BaseStep implements StepInterface {
     {
       field: 'prompt',
       type: FieldDefinition.Type.STRING,
-      description: 'User Prompt to send to GPT',
+      description: 'User Prompt to send to Gemini',
     },
     {
       field: 'model',
       type: FieldDefinition.Type.STRING,
-      description: 'GPT Model to use for completion',
+      description: 'Gemini Model to use for completion',
     },
     {
       field: 'operator',
@@ -41,7 +41,7 @@ export class CompletionResponseTime extends BaseStep implements StepInterface {
     {
       field: 'expectation',
       type: FieldDefinition.Type.NUMERIC,
-      description: 'Expected GPT response time in ms',
+      description: 'Expected Gemini response time in ms',
       optionality: FieldDefinition.Optionality.OPTIONAL,
     },
   ];
@@ -95,7 +95,7 @@ export class CompletionResponseTime extends BaseStep implements StepInterface {
 
     try {
       const message = prompt;
-      const completion = await this.client.getChatCompletion(model, message);
+      const completion = await this.client.getChatCompletion(model, message);      
       const responseTime = completion.response_time;
       const response = completion.text_response;
       const result = this.assert(operator, responseTime.toString(), expectation.toString(), 'response');
@@ -124,7 +124,7 @@ export class CompletionResponseTime extends BaseStep implements StepInterface {
       }
 
       return this.error(
-        'There was an error checking  Gemini chat completion object: %s',
+        'There was an error checking Gemini chat completion object: %s',
         [e.toString()],
       );
     }

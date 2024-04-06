@@ -21,8 +21,8 @@ describe('CompletionWordCount', () => {
     it('should return expected step metadata', () => {
       const stepDef: StepDefinition = stepUnderTest.getDefinition();
       expect(stepDef.getStepId()).to.equal('CompletionWordCount');
-      expect(stepDef.getName()).to.equal('Check OpenAI GPT prompt response word count from completion');
-      expect(stepDef.getExpression()).to.equal(`OpenAI model (?<model>[a-zA-Z0-9_ -.]+) word count in a response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`);
+      expect(stepDef.getName()).to.equal('Check Gemini prompt response word count from completion');
+      expect(stepDef.getExpression()).to.equal(`Gemini model (?<model>[a-zA-Z0-9_ -.]+) word count in a response to "(?<prompt>[a-zA-Z0-9_ -'".,?!]+)" should (?<operator>be set|not be set|be less than|be greater than|be one of|be|contain|not be one of|not be|not contain|match|not match) ?(?<expectation>.+)?`);
       expect(stepDef.getType()).to.equal(StepDefinition.Type.VALIDATION);
     });
 
@@ -51,11 +51,11 @@ describe('CompletionWordCount', () => {
   });
 
   describe('ExecuteStep', () => {
-    describe('GPT prompt response meets word count expectation', () => {
+    describe('Gemini prompt response meets word count expectation', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response meets the expected word count
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
+        // Setup for the scenario where the Gemini response meets the expected word count
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
           prompt: expectedPrompt,
@@ -76,11 +76,11 @@ describe('CompletionWordCount', () => {
       });
     });
 
-    describe('GPT prompt response does not meet word count expectation', () => {
+    describe('Gemini prompt response does not meet word count expectation', () => {
       beforeEach(() => {
-        // Setup for the scenario where the GPT response does not meet the expected word count
-        const expectedModel: string = 'gpt-model';
-        const expectedPrompt: string = 'Hello, GPT!';
+        // Setup for the scenario where the Gemini response does not meet the expected word count
+        const expectedModel: string = 'gemini-model';
+        const expectedPrompt: string = 'Hello, Gemini!';
         protoStep.setData(Struct.fromJavaScript({
           model: expectedModel,
           prompt: expectedPrompt,
@@ -101,7 +101,7 @@ describe('CompletionWordCount', () => {
       });
     });
 
-    describe('Error occurred while fetching GPT prompt response', () => {
+    describe('Error occurred while fetching Gemini prompt response', () => {
       beforeEach(() => {
         // setup for the scenario where an error occurs during operation
         clientWrapperStub.getChatCompletion.throws('error');
